@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+
+<div layout:fragment="content" class="container my-3">
+    <div class="col-lg-10">
+
+        <h2 class="mb-4 fw-bold">질문 리스트</h2>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered align-middle mb-0">
+
+                        <thead class="table-dark">
+                        <tr>
+                            <th scope="col" class="text-center" style="width: 10%;">
+                                번호
+                            </th>
+                            <th scope="col" style="width: 65%;">
+                                제목 (Subject)
+                            </th>
+                            <th scope="col" class="text-center" style="width: 25%;">
+                                작성일 (Created)
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <!-- 질문 목록 -->
+                        <tr th:each="question, loop : ${paging}">
+
+                            <td class="text-center"
+                                th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}">
+                            </td>
+
+                            <td>
+                                <a th:href="@{|/question/${question.id}|}"
+                                   th:text="${question.subject}"
+                                   class="text-decoration-none text-dark">
+                                    제목
+                                </a>
+
+                                <!-- 답변 개수 뱃지 -->
+                                <span th:if="${#lists.size(question.answerList) > 0}"
+                                      th:text="${#lists.size(question.answerList)}"
+                                      class="badge bg-danger rounded-pill ms-1">
+                                </span>
+                            </td>
+
+                            <td th:text="${#temporals.format(question.created, 'yyyy-MM-dd HH:mm')}"
+                                class="text-center">
+                                작성일
+                            </td>
+
+                        </tr>
+
+                        <!-- 질문이 없는 경우 -->
+                        <tr th:if="${paging.isEmpty()}">
+                            <td colspan="3" class="text-center text-muted py-4">
+                                등록된 질문이 없습니다.
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 페이징 기능 추가 -->
+                <div th:if="${!paging.isEmpty()}">
+
+                    <th:block th:with="startPage=${(paging.number/10) * 10},
+                    endPage=(${(paging.totalPages == 0) ? 1 : (startPage + 9 < paging.totalPages ? startPage + 9 : paging.totalPages - 1)})">
+
+                        <ul class="pagination justify-content-center">
+
+                            <!-- 처음 -->
+                            <li class="page-item"
+                                th:classappend="${paging.number == 0} ? 'disabled'">
+                                <a class="page-link" href="javascript:void(0)" th:data-page="0">
+                                    <span>처음</span>
+                                </a>
+                            </li>
+
+                            <!-- 이전 -->
+                            <li class="page-item"
+                                th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                                <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number-1}">
+                                    <span>이전</span>
+                                </a>
+                            </li>
+
+                            <!-- 페이지 번호 -->
+                            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                                th:classappend="${page == paging.number} ? 'active'"
+                                class="page-item">
+                                <a th:text="${page + 1}"
+                                   class="page-link"
+                                   href="javascript:void(0)"
+                                   th:data-page="${page}">
+                                </a>
+                            </li>
+
+                            <!-- 다음 -->
+                            <li class="page-item"
+                                th:classappend="${!paging.hasNext} ? 'disabled'">
+                                <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number+1}">
+                                    <span>다음</span>
+                                </a>
+                            </li>
+
+                            <!-- 마지막 -->
+                            <li class="page-item"
+                                th:classappend="${paging.number == paging.totalPages-1} ? 'disabled'">
+                                <a class="page-link" href="javascript:void(0)" th:data-page="${paging.totalPages-1}">
+                                    <span>마지막</span>
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </th:block>
+                </div>
+                <!-- 페이징 기능 종료 -->
+
+                <form th:action="@{/question/list}" method="get" id="searchForm">
+                    <input type="hidden" id="page" name="page" th:value="${paging.number}">
+                </form>
+
+                <a th:href="@{/question/create}" class="btn btn-primary">질문 등록</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script layout:fragment="script" type="text/javascript">
+    const page_elements =document.getElementsByClassName("page-link");
+    Array.from(page_elements).forEach(function (element) {
+        element.addEventListener("click", function () {
+            document.getElementById("page").value = this.dataset.page; //data-name -> page가 name로
+            document.getElementById("searchForm").submit();
+        })
+    })
+</script>
+
+
+</html>
+
