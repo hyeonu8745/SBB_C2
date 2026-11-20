@@ -27,7 +27,6 @@ public class SecurityConfig {
         );
 
 
-
         http.logout(Customizer.withDefaults());
 
 //        http.csrf(csrf -> csrf.disable());

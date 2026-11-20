@@ -44,7 +44,7 @@ class QuestionRepositoryTest {
         Question q2 = Question.builder()
                 .content("테스트 입력 내용 입니다.")
                 .subject("테스트 제목 입니다.")
-                .created(LocalDateTime.now())
+//                .created(LocalDateTime.now())
                 .build();
 
         Question save1 = questionRepository.save(q2);

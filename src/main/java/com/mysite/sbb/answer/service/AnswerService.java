@@ -21,7 +21,7 @@ public class AnswerService {
         Answer answer = Answer.builder()
                 .content(answerDTO.getContent())
                 .question(question)
-                .created(LocalDateTime.now())
+//                .created(LocalDateTime.now())
                 .build();
 
         Answer saved = answerRepository.save(answer);

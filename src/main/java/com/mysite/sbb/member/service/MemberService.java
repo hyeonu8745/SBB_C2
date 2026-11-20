@@ -36,7 +36,7 @@ public class MemberService implements UserDetailsService {
                 .gender(memberDto.getGender())
                 .department(memberDto.getDepartment())
                 .registration(memberDto.getRegistration())
-                .created(LocalDateTime.now())
+//                .created(LocalDateTime.now())
                 .build();
 
         memberRepository.save(member);

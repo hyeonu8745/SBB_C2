@@ -39,7 +39,7 @@ public class QuestionService {
         Question question = Question.builder()
                 .subject(questionDTO.getSubject())
                 .content(questionDTO.getContent())
-                .created(LocalDateTime.now())
+//                .created(LocalDateTime.now())
                 .build();
 
         questionRepository.save(question);
